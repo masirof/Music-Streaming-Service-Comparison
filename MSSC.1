@@ -1,0 +1,29 @@
+import re
+import requests
+import lxml
+from html import unescape
+from lxml import html
+
+a = 'トリカゴ'
+rekotyoku_url = 'http://recochoku.jp/search/all/?q=' + a + '&affiliate='
+# http://recochoku.jp/search/all/?q=&affiliate=
+# http://recochoku.jp/search/all/?q=%E3%83%88%E3%83%AA%E3%82%AB%E3%82%B4&affiliate=
+# url取得してもらう
+r = requests.get(rekotyoku_url)
+# pythonでhtmlを扱いたいのでlxmlでhtmlを操作
+html = lxml.html.fromstring(r.content)
+# xpathの指定
+# wrap > div > div.left1 > div.clearfix > div:nth-child(3) > div > ul > li:nth-child(1) > div.link_bl > div.info > div.ttls.wordWrap > a
+rekotyoku = html.xpath('//*[@id="wrap"]/div/div[1]/div[3]/div[2]/div/ul/li[1]/div[1]/div[2]/div[2]/a')
+linemusic_url = 'https://music.line.me/search/' + a
+print(linemusic_url)
+r = requests.get(linemusic_url)
+html = lxml.html.fromstring(r.content)
+# body > div.wrap > div.container > div.content > div.l-search-all > div.article > div.trackList > div > div:nth-child(1) > div > span.title.table-cell > button > span.elp
+linemusic = html.xpath('/html/body/div[1]/div[5]/div[1]/div[2]/div[1]/div[2]/div/div[1]/div/span[2]/button/span[3]')
+if__name__ = "__main__"
+# xpathで指定されたtagの中身を見れるようにする
+rekotyoku = rekotyoku[0].text
+# linemusic = linemusic[0].text
+print('レコチョク: ' + rekotyoku)
+print(linemusic)
